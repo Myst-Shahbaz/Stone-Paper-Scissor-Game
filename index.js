@@ -2,32 +2,63 @@ let userscore = 0;
 let compscore = 0;
 
 const choices = document.querySelectorAll(".images");
+const msg = document.querySelector("#msg");
 
-const playgame = (Userchoice) => {
-  console.log(`User choice is ${Userchoice}`);
+const userscorenumber = document.querySelector("#user-score");
+const computersccorenumber = document.querySelector("#comp-score");
 
-  const compuchoice = gencompchoice();
+choices.forEach((option) => {
+  // console.log(option);
+  option.addEventListener("click", () => {
+    let userchoice = option.getAttribute("id");
+    playgame(userchoice);
+  });
+});
 
-  console.log(`Computer choice is ${compuchoice}`);
+const playgame = (userchoice) => {
+  console.log(`Userchoice is ${userchoice}`);
 
-  if(Userchoice === compuchoice){
+  const computerchoice = compchoice();
+  console.log(`computerchoice is ${computerchoice}`);
+
+  if (userchoice === computerchoice) {
     drawgame();
+  } else {
+    let userwin = true;
+    if (userchoice === "rock") {
+      userwin = computerchoice === "paper" ? false : true;
+    } else if (userchoice === "paper") {
+      userwin = computerchoice === "scissor" ? false : true;
+    } else {
+      userwin = compchoice === "rock" ? false : true;
+    }
+    showWinner(userwin, userchoice, compchoice);
   }
 };
 
-const gencompchoice = () => {
+const compchoice = () => {
   const options = ["rock", "paper", "scissor"];
-  const randomvalue = Math.floor(Math.random() * 3);
-  return options[randomvalue];
+  const randidx = Math.floor(Math.random() * 3);
+  return options[randidx];
 };
 
 const drawgame = () => {
-  console.log("Game Draw");
+  console.log("Draw");
+  msg.innerText = "Draw!";
 };
-choices.forEach((choice) => {
-  console.log(choice);
-  choice.addEventListener("click", () => {
-    const Userchoice = choice.getAttribute("id");
-    playgame(Userchoice);
-  });
-});
+
+const showWinner = (userwin, userchoice, compchoice) => {
+  if (userwin) {
+    userscore++;
+    userscorenumber.innerText = userscore;
+    console.log("you Win");
+    msg.innerText = "User Win!";
+    msg.style.backgroundColor = "green";
+  } else {
+    compscore++;
+    computersccorenumber.innerText = compscore;
+    console.log("you lose");
+    msg.innerText = "You Lose!";
+    msg.style.backgroundColor = "red";
+  }
+};
